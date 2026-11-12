@@ -33,7 +33,8 @@ public class Scaffold {
                 Vec3d hitVec = Vec3d.ofCenter(below);
                 BlockHitResult hitResult = new BlockHitResult(hitVec, Direction.UP, below, false);
 
-                mc.interactionManager.interactBlock(player, mc.world, Hand.MAIN_HAND, hitResult);
+                // Сигнатура этой версии: (player, hand, hitResult)
+                mc.interactionManager.interactBlock(player, Hand.MAIN_HAND, hitResult);
 
                 player.getInventory().selectedSlot = oldSlot;
             }
