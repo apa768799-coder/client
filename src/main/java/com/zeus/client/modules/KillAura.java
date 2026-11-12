@@ -9,7 +9,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.Box;
 
-import java.util.Comparator;
 import java.util.List;
 
 public class KillAura {
@@ -46,10 +45,12 @@ public class KillAura {
 
         if (targets.isEmpty()) return;
 
-        targets.sort(
-                Comparator.comparingDouble(player::distanceTo)
-                        .thenComparingDouble(LivingEntity::getHealth)
-        );
+        // Ближайший первым, при равенстве дистанции — самый слабый
+        targets.sort((a, b) -> {
+            int byDistance = Float.compare(player.distanceTo(a), player.distanceTo(b));
+            if (byDistance != 0) return byDistance;
+            return Float.compare(a.getHealth(), b.getHealth());
+        });
 
         LivingEntity target = targets.get(0);
 
