@@ -2,11 +2,11 @@ package com.zeus.client.utils;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.component.DataComponents;
+import net.minecraft.component.type.DyedColorComponent;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.scoreboard.AbstractTeam;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
 import net.minecraft.util.Formatting;
@@ -18,25 +18,10 @@ public class TeamUtils {
         if (player == null || target == null) return false;
         if (target == player) return true;
 
-        AbstractTeam playerTeam = player.getScoreboardTeam();
-        AbstractTeam targetTeam = target.getScoreboardTeam();
+        // Команды скорборда: серверные тимы Bedwars
+        if (player.isTeammate(target)) return true;
 
-        if (playerTeam != null && targetTeam != null) {
-            if (playerTeam == targetTeam || playerTeam.equals(targetTeam)) {
-                return true;
-            }
-
-            Formatting playerColor = playerTeam.getColor();
-            Formatting targetColor = targetTeam.getColor();
-
-            if (playerColor != null
-                    && targetColor != null
-                    && playerColor != Formatting.RESET
-                    && playerColor == targetColor) {
-                return true;
-            }
-        }
-
+        // Цвет отображаемого имени
         TextColor playerNameColor = getTextColor(player.getDisplayName());
         TextColor targetNameColor = getTextColor(target.getDisplayName());
 
@@ -46,6 +31,7 @@ public class TeamUtils {
             return true;
         }
 
+        // Старые цветовые коды §
         Formatting playerLegacyColor = getLegacyColor(player.getDisplayName());
         Formatting targetLegacyColor = getLegacyColor(target.getDisplayName());
 
@@ -55,6 +41,7 @@ public class TeamUtils {
             return true;
         }
 
+        // Крашеная броня через компоненты данных
         return sameArmorColor(player, target);
     }
 
@@ -112,13 +99,11 @@ public class TeamUtils {
         try {
             if (stack == null || stack.isEmpty()) return -1;
 
-            NbtCompound nbt = stack.getNbt();
-            if (nbt == null || !nbt.contains("display")) return -1;
+            // В 1.21.4 цвет кожи — это DataComponents.DYED_COLOR, не NBT
+            DyedColorComponent dyed = stack.get(DataComponents.DYED_COLOR);
+            if (dyed == null) return -1;
 
-            NbtCompound display = nbt.getCompound("display");
-            if (!display.contains("color")) return -1;
-
-            return display.getInt("color");
+            return dyed.rgb();
         } catch (Throwable ignored) {
             return -1;
         }
