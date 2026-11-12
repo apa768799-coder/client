@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "zeus-client",
+  "version": "1.0.0",
+  "name": "Zeus Client",
+  "description": "Zeus Client",
+  "authors": [
+    "Zeus"
+  ],
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.zeus.client.ZeusClient"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.15.0",
+    "fabric-api": "*",
+    "minecraft": ">=1.20.1",
+    "java": ">=17"
+  }
+}
