@@ -2,7 +2,7 @@ package com.zeus.client.utils;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.component.DataComponents;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.DyedColorComponent;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -99,8 +99,8 @@ public class TeamUtils {
         try {
             if (stack == null || stack.isEmpty()) return -1;
 
-            // В 1.21.4 цвет кожи — это DataComponents.DYED_COLOR, не NBT
-            DyedColorComponent dyed = stack.get(DataComponents.DYED_COLOR);
+            // Yarn-маппинги используют DataComponentTypes
+            DyedColorComponent dyed = stack.get(DataComponentTypes.DYED_COLOR);
             if (dyed == null) return -1;
 
             return dyed.rgb();
